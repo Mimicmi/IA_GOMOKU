@@ -1,0 +1,77 @@
+#!/usr/bin/python3
+
+import random
+import os
+import platform
+import sys
+from case import Case
+from board import Board
+from brain_simple import Brain_simple
+
+size = 19
+board = Board(size)
+ia = Brain_simple(board)
+turnNum = 1
+
+while 1:
+    _in = input()
+    cmd = _in.split()
+   
+    if cmd[0].upper() == "START":
+        try:
+            boardSize = int(cmd[1])
+            board = Board(boardSize)
+            ia = Brain_simple(board)
+        
+        except:
+            print("ERROR", flush=True)
+            exit()
+
+        if int(boardSize) < 1:
+            print("ERROR", flush=True)
+        else:
+            print("OK - everything is good", flush=True)
+
+    elif cmd[0].upper() == "TURN":
+            # try:
+            cmd[1]
+            turncord = cmd[1].split(",")
+            turncord = Case(turncord[0], turncord[1])
+            board.board(turncord, 2)
+            ai_cord = ia.playSafe(turncord, turnNum)
+            turnNum += 1
+
+            # except:
+            #     print("MESSAGE Please Enter Valid Argument", flush=True)
+
+    elif cmd[0].upper() == "BEGIN":
+        case = Case(0,0)
+        ia.playSafe(case, 1)
+        turnNum += 1
+
+    elif cmd[0].upper() == "BOARD":
+            board.reinit()
+            while _in.upper() != "DONE":
+                _in = sys.stdin.readline().strip()
+                _inSplit = _in.split(',')
+                if _in.upper() != "DONE":
+                    try:
+                        pos = Case(int(_inSplit[0]), int(_inSplit[1]))
+                        if int(_inSplit[2]) > 3 :
+                            print("MESSAGE Please Enter Valid Argument", flush=True)
+                        else:
+                            value = int(_inSplit[2])
+                            board.board(pos, value)
+                            turnNum += 1
+                    except:
+                        print("MESSAGE Please Enter Valid Argument", flush=True)
+            ia.playSafe(pos, turnNum)
+            turnNum += 1
+
+    elif cmd[0].upper() == "END":
+        os.system("clear")
+        break
+    else:
+        print("UNKNOWN", flush = True)
+
+       
